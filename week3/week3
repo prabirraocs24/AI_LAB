@@ -1,0 +1,57 @@
+def cost(board):
+    conflicts = 0
+    n = len(board)
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            if board[i] == board[j] or abs(board[i] - board[j]) == abs(i - j):
+                conflicts += 1
+
+    return conflicts
+
+
+def generate_neighbors(board):
+    n = len(board)
+    neighbors = []
+
+    for col in range(n):
+        for row in range(1, n + 1):
+            if row != board[col]:
+                neighbor = board.copy()
+                neighbor[col] = row
+                neighbors.append(neighbor)
+
+    return neighbors
+
+
+def hill_climbing(board):
+    current = board.copy()
+    current_cost = cost(current)
+
+    while current_cost != 0:
+        print("\nCurrent board:", current)
+        print("Current cost:", current_cost)
+
+        neighbors = generate_neighbors(current)
+
+        for neighbor in neighbors:
+            print("Neighbor:", neighbor, "Cost:", cost(neighbor))
+
+        best_neighbor = min(neighbors, key=cost)
+        best_cost = cost(best_neighbor)
+
+        if best_cost >= current_cost:
+            print("\nLocal optimum reached")
+            print("No solution found from this state")
+            return
+
+        current = best_neighbor
+        current_cost = best_cost
+
+    print("\nGoal reached!")
+    print("Solution board:", current)
+    print("Final cost:", current_cost)
+
+
+initial_board = [1, 1, 1, 1]
+hill_climbing(initial_board)
